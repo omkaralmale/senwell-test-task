@@ -5,7 +5,7 @@ import Table from './Table';
 function App() {
   const [data, setData] = useState();
 
-  const callApi=()=>{
+  const callApi = () => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
       .then(data => setData(data))
@@ -17,18 +17,18 @@ function App() {
   }, [])
   console.log(data);
 
-  const handleDelete=(id)=>{
-    setData(data.filter((item)=>item?.id !==id ))
+  const handleDelete = (id) => {
+    setData(data.filter((item) => item?.id !== id))
   }
 
-  const onReset=()=>{
- callApi()
+  const onReset = () => {
+    callApi()
   }
 
 
   return (
     <div className="App">
-      <Table list={data} handleDelete={(id)=>handleDelete(id)} onReset={onReset}/>
+      <Table list={data} handleDelete={(id) => handleDelete(id)} onReset={onReset} />
     </div>
   );
 }

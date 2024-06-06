@@ -1,37 +1,48 @@
 import React, { useEffect, useState } from 'react';
 let timeoutId;
-const Table = ({ list,handleDelete,onReset }) => {
+const Table = ({ list, handleDelete, onReset }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredUsers, setFilteredUsers] = useState(list || []);
 
-const handleSearchChange = (value) => {
-  setSearchTerm(value);
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
 
-  clearTimeout(timeoutId);
+    clearTimeout(timeoutId);
 
-  timeoutId = setTimeout(() => {
-    const filtered = (list || []).filter(user =>
-      user.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredUsers(filtered);
-  }, 1000);
-};
+    timeoutId = setTimeout(() => {
+      const filtered = (list || []).filter(user =>
+        user.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }, 1000);
+  };
 
 
-  useEffect(()=>{
+  useEffect(() => {
     if (list) {
-        setFilteredUsers(list)
+      setFilteredUsers(list)
     }
-  },[list])
+  }, [list])
 
-  const handleDeleteId=(id)=>{
+  const handleDeleteId = (id) => {
     handleDelete(id)
   }
-  const handleReset=()=>{
-onReset()
+  const handleReset = () => {
+    onReset()
   }
 
-  const header=["ID","NAME","COMPANY","ADDRESS","ACTION"]
+  const handleMouseEnter = (index) => {
+    document.getElementById(`company-details-${index}`).style.opacity = "1";
+    document.getElementById(`company-details-${index}`).style.zIndex = "10";
+  };
+
+
+  const handleMouseLeave = (index) => {
+    document.getElementById(`company-details-${index}`).style.opacity = "0";
+    document.getElementById(`company-details-${index}`).style.zIndex = "0";
+  };
+
+  const header = ["ID", "NAME", "COMPANY", "ADDRESS", "ACTION"]
   return (
     <div>
       <input
@@ -45,7 +56,7 @@ onReset()
       <table className="w-3/4 border-collapse rounded border border-gray-300 m-2">
         <thead>
           <tr>
-            {header.map((item,index)=><th key={index} className="border border-gray-300 p-2 text-sm">{item}</th>)}
+            {header.map((item, index) => <th key={index} className="border border-gray-300 p-2 text-sm">{item}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -57,10 +68,12 @@ onReset()
                 <div
                   className="relative"
                 >
-                  <div className="text-sm">{user.company.name}</div>
-                  <div className="text-sm absolute bg-white border border-gray-300 px-2 rounded shadow-md hidden opacity-0 transition duration-300 ease-in-out transform translate-y-2 hover:opacity-100 hover:block" id={`company-details-${index}`}>
-                    <p className="text-sm">{`Catchphrase: ${user.company.catchPhrase}`}</p>
-                    <p className="text-sm">{`BS: ${user.company.bs}`}</p>
+                  <div className="text-sm"
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={() => handleMouseLeave(index)}>{user.company.name}</div>
+                  <div className="text-sm absolute bg-white z-50 border border-gray-300 px-2 rounded shadow-md opacity-0 w-max" id={`company-details-${index}`}>
+                    <p className="text-sm z-10">{`Catchphrase: ${user.company.catchPhrase}`}</p>
+                    <p className="text-sm z-10">{`BS: ${user.company.bs}`}</p>
                   </div>
                 </div>
               </td>
@@ -75,5 +88,4 @@ onReset()
     </div>
   );
 };
-
 export default Table;
